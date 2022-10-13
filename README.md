@@ -8,6 +8,7 @@
 
 - Node.js 
 - Express
+- Typescript
 
 ## Функционал
 
