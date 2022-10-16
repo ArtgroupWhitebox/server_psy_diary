@@ -41,7 +41,8 @@ app.post('/users', (req, res) => {
         id: +(new Date()),
         nick: req.body.nick,
         email: req.body.email,
-        password: req.body.password     
+        password: req.body.password,
+        avatar: req.body.avatar     
     }
     db.users.push(createdUser)       
     res.json(createdUser) 
@@ -61,21 +62,12 @@ app.post('/upload', (req, res) => {
     // If does not have image mime type prevent from uploading
     if (!/^image/.test(image.mimetype)) return res.status(400).send("Это не картинка")
 
-    // Move the uploaded image to our upload folder    
+    // Move the uploaded image to our upload folder 
     image.mv(publicPath + '/upload/' + image.name)
     
     // All good
     res.status(200).json({imageUrl: `http://localhost:${PORT}/static/upload/${image.name}`})
 })
-
-// app.put('/users/:id', (req, res) => { 
-//     const createdAvatar = {
-//         avatar: req.body.avatar
-//     }
-//     db.users.push(createdAvatar)
-//     console.log(createdAvatar)
-//     res.json(createdAvatar)    
-// })
 
 app.listen(PORT, () => {
     console.log(`CORS-enabled web server listening on port ${PORT}... This is CORS-enabled for all origins!`)
