@@ -28,7 +28,7 @@ app.get('/users', (req, res) => {
 })  
 
 app.get('/users/:id', (req, res) => { 
-    const foundUser = db.users.find((el: { id: number }) => el.id === +req.params.id)
+    const foundUser = db.users.find((user: { id: number }) => user.id === +req.params.id)
     if (!foundUser) {
         res.sendStatus(404)
         return
@@ -36,7 +36,11 @@ app.get('/users/:id', (req, res) => {
     res.json(foundUser)    
 }) 
 
-app.post('/users', (req, res) => { 
+app.post('/users', (req, res) => {
+    if (!req.body.nick) return res.status(400).send("Поле nick пустое")
+    if (!req.body.email ) return res.status(400).send("Поле email пустое")
+    if (!req.body.password ) return res.status(400).send("Поле password пустое")
+    if (!req.body.avatar ) return res.status(400).send("Поле avatar пустое")
     const createdUser = {
         id: +(new Date()),
         nick: req.body.nick,
@@ -46,6 +50,22 @@ app.post('/users', (req, res) => {
     }
     db.users.push(createdUser)       
     res.json(createdUser) 
+})
+
+app.put('/users/:id', (req, res) => { 
+    if (!req.body.nick) return res.status(400).send("Поле nick пустое")
+    if (!req.body.email ) return res.status(400).send("Поле email пустое")
+    if (!req.body.password ) return res.status(400).send("Поле password пустое")
+    if (!req.body.avatar ) return res.status(400).send("Поле avatar пустое")
+
+    const foundUser = db.users.find((user: { id: number }) => user.id === +req.params.id)    
+        
+    foundUser.nick = req.body.nick
+    foundUser.email = req.body.email
+    foundUser.password = req.body.password
+    foundUser.avatar = req.body.avatar     
+    
+    res.status(201).json(foundUser) 
 })
 
 app.post('/upload', (req, res) => { 
