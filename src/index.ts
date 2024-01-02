@@ -97,5 +97,5 @@ app.listen(PORT, () => {
     CORS-enabled web server listening on port ${PORT}... 
     This is CORS-enabled for all origins!`)
 
-    console.log(`Server started: ${SERVER_URL}:${PORT}`)
+    console.log(`Server started: localhost:${PORT}`)
 })
