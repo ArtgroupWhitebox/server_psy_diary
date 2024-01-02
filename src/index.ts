@@ -3,8 +3,8 @@ import fileUpload from 'express-fileupload'
 import cors from 'cors'
 import { db } from './db'
 
-const SERVER_URL = process.env.SERVER_URL || "http://localhost"
-const PORT = process.env.PORT || 7000 
+const PORT = process.env.PORT || 7000
+const SERVER_URL = process.env.SERVER_URL || `http://localhost:${PORT}`
 const publicPath = process.env.PUBLIC_PATH || 
     `C:\\Users\\ML\\APP artgroup_whitebox\\server_psy_diary\\public`
 
@@ -59,7 +59,8 @@ app.put('/users/:id', (req, res) => {
     if (!req.body.password ) return res.status(400).send("Поле password пустое")
     if (!req.body.avatar ) return res.status(400).send("Поле avatar пустое")
 
-    const foundUser = db.users.find((user: { id: number }) => user.id === +req.params.id)    
+    const foundUser = db.users
+      .find((user: { id: number }) => user.id === +req.params.id)    
         
     foundUser.nick = req.body.nick
     foundUser.email = req.body.email
@@ -89,7 +90,7 @@ app.post('/upload', (req, res) => {
     image.mv(publicPath + '/upload/' + image.name)
     
     // All good
-    res.status(200).json({imageUrl: `${SERVER_URL}:${PORT}/static/upload/${image.name}`})
+    res.status(200).json({imageUrl: `${SERVER_URL}/static/upload/${image.name}`})
 })
 
 app.listen(PORT, () => {
