@@ -3,11 +3,12 @@ import fileUpload from 'express-fileupload'
 import cors from 'cors'
 import { db } from './db'
 
+const SERVER_URL = process.env.SERVER_URL || "http://localhost"
 const PORT = process.env.PORT || 7000 
-const app = express()
+const publicPath = process.env.PUBLIC_PATH || 
+    `C:\\Users\\ML\\APP artgroup_whitebox\\server_psy_diary\\public`
 
-const publicPath = process.env.PUBLIC_PATH || `C:\\Users\\ML\\APP artgroup_whitebox\\server_psy_diary\\public`
-console.log("PATH P: ", publicPath + '/upload/')
+const app = express()
 
 app.use(cors())
 app.use('/static', express.static(publicPath))
@@ -80,15 +81,21 @@ app.post('/upload', (req, res) => {
     if (!image) return res.status(400).send("Картинка не вставлена")
 
     // If does not have image mime type prevent from uploading
-    if (!/^image/.test(image.mimetype)) return res.status(400).send("Это не картинка")
+    if (!/^image/.test(image.mimetype)) 
+        return res.status(400)
+            .send("Это не картинка, не верный тип файла, нужен файл типа image")
 
     // Move the uploaded image to our upload folder 
     image.mv(publicPath + '/upload/' + image.name)
     
     // All good
-    res.status(200).json({imageUrl: `http://localhost:${PORT}/static/upload/${image.name}`})
+    res.status(200).json({imageUrl: `${SERVER_URL}:${PORT}/static/upload/${image.name}`})
 })
 
 app.listen(PORT, () => {
-    console.log(`CORS-enabled web server listening on port ${PORT}... This is CORS-enabled for all origins!`)
+    console.log(`
+    CORS-enabled web server listening on port ${PORT}... 
+    This is CORS-enabled for all origins!`)
+
+    console.log(`Server started: ${SERVER_URL}:${PORT}`)
 })
